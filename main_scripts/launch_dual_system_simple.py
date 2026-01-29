@@ -41,12 +41,19 @@ def main():
             ['start', 'cmd', '/k', sys.executable, DISH_DETECTOR_SCRIPT],
             shell=True
         )
-    else:  # Linux/Mac
-        subprocess.Popen(
-            [sys.executable, DISH_DETECTOR_SCRIPT],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
+    else:  # Linux/Mac - use nohup to detach properly
+        log_dir = os.path.join(PROJECT_ROOT, "logs")
+        os.makedirs(log_dir, exist_ok=True)
+
+        dish_log = os.path.join(log_dir, "dish_detector.log")
+        with open(dish_log, 'w') as f:
+            subprocess.Popen(
+                ['nohup', sys.executable, DISH_DETECTOR_SCRIPT],
+                stdout=f,
+                stderr=subprocess.STDOUT,
+                start_new_session=True
+            )
+        print(f"  Log file: {dish_log}")
 
     time.sleep(2)
 
@@ -57,12 +64,19 @@ def main():
             ['start', 'cmd', '/k', sys.executable, FACE_RECOGNITION_SCRIPT],
             shell=True
         )
-    else:  # Linux/Mac
-        subprocess.Popen(
-            [sys.executable, FACE_RECOGNITION_SCRIPT],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
+    else:  # Linux/Mac - use nohup to detach properly
+        log_dir = os.path.join(PROJECT_ROOT, "logs")
+        os.makedirs(log_dir, exist_ok=True)
+
+        face_log = os.path.join(log_dir, "face_recognition.log")
+        with open(face_log, 'w') as f:
+            subprocess.Popen(
+                ['nohup', sys.executable, FACE_RECOGNITION_SCRIPT],
+                stdout=f,
+                stderr=subprocess.STDOUT,
+                start_new_session=True
+            )
+        print(f"  Log file: {face_log}")
 
     time.sleep(1)
 
@@ -72,8 +86,18 @@ def main():
     print("Dish Detection:      http://localhost:5000")
     print("Face Recognition:    http://localhost:5002")
     print("=" * 60)
-    print("\nBoth systems are running in separate windows/processes")
-    print("Close each window individually to stop the systems")
+
+    if os.name != 'nt':
+        print("\nBoth systems are running in background (detached)")
+        print(f"View logs:")
+        print(f"  tail -f {os.path.join(PROJECT_ROOT, 'logs/dish_detector.log')}")
+        print(f"  tail -f {os.path.join(PROJECT_ROOT, 'logs/face_recognition.log')}")
+        print("\nTo stop the systems:")
+        print("  pkill -f dish_detector_groupme.py")
+        print("  pkill -f face_recognition_web.py")
+    else:
+        print("\nBoth systems are running in separate windows")
+        print("Close each window individually to stop the systems")
     print("=" * 60)
 
 if __name__ == '__main__':

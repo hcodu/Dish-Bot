@@ -18,31 +18,58 @@ This folder contains launcher scripts that run both the dish detection and face 
 
 ### Launcher Scripts
 
-#### Option 1: Simple Launcher (Recommended for Windows)
+#### Option 1: Simple Launcher (Recommended for SSH/Raspberry Pi)
 ```bash
-python launch_dual_system_simple.py
+python3 launch_dual_system_simple.py
 ```
 
 **Features:**
-- Launches both systems in separate terminal windows (Windows) or background processes (Linux)
+- Launches both systems as background processes (Linux) or separate windows (Windows)
+- Uses `nohup` and session detachment on Linux - processes survive SSH disconnection
+- Logs output to `logs/` directory
 - Simple and reliable
-- Each system runs independently
-- Close each window individually to stop
 
-**Best for:** Quick testing, Windows development
+**On Linux:**
+- Processes run in background and won't stop when SSH session ends
+- Logs saved to `logs/dish_detector.log` and `logs/face_recognition.log`
+- Use `python3 check_status.py` to verify systems are running
+- Use `python3 stop_dual_system.py` to stop both systems
 
-#### Option 2: Advanced Launcher
+**Best for:** SSH deployment, Raspberry Pi, production use
+
+#### Option 2: Advanced Launcher (Interactive Monitoring)
 ```bash
 python launch_dual_system.py
 ```
 
 **Features:**
-- Launches both systems with combined output monitoring
+- Launches both systems with live combined output monitoring
 - Single Ctrl+C stops both systems gracefully
 - Shows tagged output: `[DISH]` and `[FACE]`
 - Automatic cleanup if one system fails
+- **Warning:** Processes will stop if SSH session ends
 
-**Best for:** Production deployment, Linux/Raspberry Pi
+**Best for:** Development, debugging, when you want to see live output
+
+### Helper Scripts
+
+#### Check Status
+```bash
+python3 check_status.py
+```
+
+Shows:
+- Which systems are running (with PIDs)
+- Recent log output (last 5 lines)
+- Access URLs
+- Command hints
+
+#### Stop Systems
+```bash
+python3 stop_dual_system.py
+```
+
+Gracefully stops both dish detection and face recognition processes.
 
 ## Usage
 
@@ -54,11 +81,45 @@ Make sure you have:
 - YOLO dish detection model available
 - All dependencies installed (see [requirements.txt](../requirements.txt))
 
-### Running on Raspberry Pi
+### Running on Raspberry Pi (via SSH)
+
+**First time setup (make scripts executable):**
+```bash
+cd main_scripts
+chmod +x *.py
+```
+
+**Recommended method for SSH:**
 
 ```bash
 cd main_scripts
-python3 launch_dual_system.py
+python3 launch_dual_system_simple.py
+# Or: ./launch_dual_system_simple.py
+```
+
+This will:
+- Launch both systems in background
+- Create log files in `logs/` directory
+- Continue running even if you disconnect from SSH
+- Can be accessed from any device on your network
+
+**Check if systems are running:**
+```bash
+python3 check_status.py
+```
+
+**View live logs:**
+```bash
+# Dish detection
+tail -f ../logs/dish_detector.log
+
+# Face recognition
+tail -f ../logs/face_recognition.log
+```
+
+**Stop both systems:**
+```bash
+python3 stop_dual_system.py
 ```
 
 Access the interfaces:
