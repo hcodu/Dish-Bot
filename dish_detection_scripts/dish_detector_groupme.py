@@ -15,7 +15,7 @@ from urllib.parse import quote
 app = Flask(__name__)
 
 # Load NCNN model (much faster on Pi 3!)
-model = YOLO("best_ncnn_model", task="detect")
+model = YOLO("../best_ncnn_model", task="detect")
 
 cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
 cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M','J','P','G'))
