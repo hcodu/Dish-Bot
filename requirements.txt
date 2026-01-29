@@ -1,0 +1,8 @@
+ultralytics
+opencv-python
+flask
+numpy
+requests
+ncnn
+face_recognition>=1.3.0
+dlib>=19.24.0

@@ -1,0 +1,18 @@
+description: Ultralytics YOLO11n model trained on /app/repo/train/tempfiles/yolov8_project_dir/data_config.yaml
+author: Ultralytics
+date: '2026-01-24T22:02:03.906937'
+version: 8.4.7
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 320
+- 320
+names:
+  0: Dish
+args:
+  batch: 1
+  half: false
+channels: 3
