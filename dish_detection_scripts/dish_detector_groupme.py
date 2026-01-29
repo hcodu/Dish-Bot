@@ -14,11 +14,16 @@ from urllib.parse import quote
 
 app = Flask(__name__)
 
+# Get the directory where this script is located
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+
 # Enable/Disable GroupMe messaging
 ENABLE_GROUPME = False  # Set to False to disable all GroupMe messages
 
 # Load NCNN model (much faster on Pi 3!)
-model = YOLO("../best_ncnn_model", task="detect")
+MODEL_PATH = os.path.join(PROJECT_ROOT, "best_ncnn_model")
+model = YOLO(MODEL_PATH, task="detect")
 
 cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
 cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M','J','P','G'))

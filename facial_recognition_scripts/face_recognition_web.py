@@ -11,12 +11,15 @@ import os
 import time
 from flask import Flask, Response
 
+# Get the directory where this script is located
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Configuration
 CAMERA_INDEX = 4  # Your 1080p webcam
 FRAME_WIDTH = 640
 FRAME_HEIGHT = 480
-LABEL_FILE = "known_faces_opencv.pkl"
-MODEL_FILE = "face_recognizer.xml"
+LABEL_FILE = os.path.join(SCRIPT_DIR, "known_faces_opencv.pkl")
+MODEL_FILE = os.path.join(SCRIPT_DIR, "face_recognizer.xml")
 
 # Performance tuning for RPi 4
 PROCESS_EVERY_N_FRAMES = 3  # Process every 3rd frame

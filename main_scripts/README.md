@@ -53,6 +53,19 @@ python launch_dual_system.py
 
 ### Helper Scripts
 
+#### Setup Checker (Run This First!)
+```bash
+python3 setup_check.py
+```
+
+Verifies before launching:
+- Dish detection model files present
+- Face recognition model trained
+- Training data available
+- Shows what's missing and how to fix it
+
+**Run this first** before launching the dual system!
+
 #### Check Status
 ```bash
 python3 check_status.py
