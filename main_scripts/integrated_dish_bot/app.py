@@ -157,7 +157,7 @@ def associate_dish_with_person(dish_id: int, association_data: dict):
         dish_snapshot_path=dish_snapshot_path,
         face_snapshot_path=face_snapshot_path,
         dish_bbox=json.dumps([float(v) for v in association_data['dish_bbox']]),
-        face_bbox=json.dumps(face_bbox) if face_bbox else None
+        face_bbox=json.dumps([int(v) for v in face_bbox]) if face_bbox else None
     )
 
     # Mark dish as associated in tracker
