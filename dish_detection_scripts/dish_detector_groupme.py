@@ -14,6 +14,9 @@ from urllib.parse import quote
 
 app = Flask(__name__)
 
+# Enable/Disable GroupMe messaging
+ENABLE_GROUPME = False  # Set to False to disable all GroupMe messages
+
 # Load NCNN model (much faster on Pi 3!)
 model = YOLO("../best_ncnn_model", task="detect")
 
@@ -123,16 +126,20 @@ def upload_image_to_groupme(image_path):
 
 def send_groupme_message(text, attachments=None):
     """Send a text message to GroupMe"""
+    if not ENABLE_GROUPME:
+        print(f"[GroupMe Disabled] Would send: {text}")
+        return True
+
     url = "https://api.groupme.com/v3/bots/post"
-    
+
     payload = {
         "bot_id": BOT_ID,
         "text": text
     }
-    
+
     if attachments:
         payload["attachments"] = attachments
-    
+
     try:
         response = requests.post(url, json=payload, timeout=10)
         response.raise_for_status()
@@ -143,6 +150,10 @@ def send_groupme_message(text, attachments=None):
 
 def send_groupme_photo(photo_path, caption=""):
     """Send a photo to GroupMe using GroupMe Image Service (API only, no webhook needed)"""
+    if not ENABLE_GROUPME:
+        print(f"[GroupMe Disabled] Would send photo: {caption}")
+        return True
+
     # Upload image to GroupMe Image Service
     if not ACCESS_TOKEN:
         print("✗ ACCESS_TOKEN required for sending images")
